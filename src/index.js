@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
-const PORT=process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 //conexion a la base de datos
 const sequelize = require("./database/db");
@@ -20,5 +20,5 @@ app.listen(PORT, () => {
         .sync({ force: false })
         .then(() => console.log("Conexion correcta a la base de datos Kverse 👌👌"))
         .then(() => console.log("Tablas sincronizadas"))
-        .catch((error) =>console.log("Error: "+error+"✖✖"))
+        .catch((error) => console.log("Error: " + error + "✖✖"))
 })
