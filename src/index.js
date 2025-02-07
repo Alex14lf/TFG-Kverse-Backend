@@ -17,8 +17,8 @@ app.use("/v1/cine/cartelera", carteleraRouter)
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT} 🚀🚀`)
     sequelize
-        .sync({ force: false })
-        .then(() => console.log("Conexion correcta a la base de datos Kverse 👌👌"))
-        .then(() => console.log("Tablas sincronizadas"))
-        .catch((error) => console.log("Error: " + error + "✖✖"))
+        .sync({ force: true })
+        .then(() => console.log("Conexion correcta a la base de datos Kverse 👍👍"))
+        .then(() => console.log("Tablas sincronizadas ✅✅"))
+        .catch((error) => console.log("Error: " + error + "❌❌"))
 })
