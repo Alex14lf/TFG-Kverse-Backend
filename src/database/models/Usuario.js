@@ -19,8 +19,8 @@ Usuario.init({
                 msg: "El campo DNI no puede ser nulo"
             },
             len: {
-                args: [9, 20],
-                msg: "El campo DNI debe tener entre 9 y 20 caracteres"
+                args: [9,9],
+                msg: "El campo DNI debe tener 9 caracteres"
             },
             isDniValido(value) {
                 const dniRegex = /^\d{8}[A-Za-z]$/;
@@ -82,7 +82,7 @@ Usuario.init({
         },
       },
       telefono: {
-        type: DataTypes.STRING(15),
+        type: DataTypes.STRING(9),
         allowNull: false,
         unique: true,
         validate: {
@@ -91,7 +91,7 @@ Usuario.init({
           },
           len: {
             args: [9, 15],
-            msg: "El campo teléfono debe tener entre 9 y 15 caracteres",
+            msg: "El campo teléfono debe tener 9 caracteres",
           },
           isNumeric: {
             msg: "El campo teléfono debe contener solo números",

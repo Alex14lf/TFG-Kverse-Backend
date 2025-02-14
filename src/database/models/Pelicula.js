@@ -101,6 +101,18 @@ Pelicula.init({
             }
         }
     },
+    fecha_estreno: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "El campo fecha de estreno no puede ser nulo",
+          },
+          isDate: {
+            msg: "El campo fecha de estreno debe ser una fecha válida",
+          },
+        },
+      },
     valoracion: {
         type: DataTypes.FLOAT,
         allowNull: false,

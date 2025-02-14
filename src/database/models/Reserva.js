@@ -42,22 +42,23 @@ Reserva.init({
             key: 'id_usuario'     
         }
     },
-    fecha_reserva: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: "El campo fecha_reserva no puede ser nulo"
-            },
-            isDate: {
-                msg: "El campo fecha_reserva debe ser una fecha válida"
-            }
-        }
-    }
+    // fecha_reserva: {
+    //     type: DataTypes.DATE,
+    //     allowNull: false,
+    //     validate: {
+    //         notNull: {
+    //             msg: "El campo fecha_reserva no puede ser nulo"
+    //         },
+    //         isDate: {
+    //             msg: "El campo fecha_reserva debe ser una fecha válida"
+    //         }
+    //     }
+    // }
 }, {
     sequelize,
     modelName: "reservas",
     timestamps: true,  // Esto añade los campos createdAt y updatedAt automáticamente
+    createdAt: 'fecha_reserva',
     freezeTableName: true
 });
 
