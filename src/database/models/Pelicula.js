@@ -140,12 +140,12 @@ Pelicula.init({
     },
     orden: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,  
+        // allowNull: false,
+        // unique: true,  
         validate: {
-            notNull: {
-                msg: "El campo orden no puede ser nulo"
-            },
+            // notNull: {
+            //     msg: "El campo orden no puede ser nulo"
+            // },
             isInt: {
                 msg: "El campo orden debe ser un número entero"
             },

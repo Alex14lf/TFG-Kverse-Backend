@@ -11,13 +11,15 @@ require('./database/associations')
 //middleware
 app.use(express.json())
 
-const carteleraRouter = require("./routes/v1/carteleraRoutes")
-app.use("/v1/cine/cartelera", carteleraRouter)
+const updateMoviesRouter = require("./routes/v1/updateMoviesRoutes")
+app.use("/v1/cine/updateMovies", updateMoviesRouter)
+const moviesRouter = require("./routes/v1/moviesRoutes")
+app.use("/v1/cine/movies", moviesRouter)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT} 🚀🚀`)
     sequelize
-        .sync({ force: true })
+        .sync({ force: false })
         .then(() => console.log("Conexion correcta a la base de datos Kverse 👍👍"))
         .then(() => console.log("Tablas sincronizadas ✅✅"))
         .catch((error) => console.log("Error: " + error + "❌❌"))

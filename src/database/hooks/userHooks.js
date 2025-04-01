@@ -8,7 +8,7 @@ const userHooks = {
   },
   
   async beforeUpdate(user) {
-    if (user.password) {
+    if (user.changed('password')) {  // Solo se hashea si la contraseña cambió
       user.password = await bcrypt.hash(user.password, 10);
     }
   }
