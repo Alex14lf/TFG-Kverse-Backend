@@ -9,23 +9,19 @@ Sala.init({
         primaryKey: true,
         autoIncrement: true
     },
-    numero: {
-        type: DataTypes.INTEGER,
+    nombre: {
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true,  // Asegura que el número de sala sea único
         validate: {
-            notNull: {
-                msg: "El campo número no puede ser nulo"
-            },
-            isInt: {
-                msg: "El campo número debe ser un valor entero"
-            },
-            min: {
-                args: [1],
-                msg: "El número debe ser al menos 1"
-            }
+          notNull: {
+            msg: "El campo nombre no puede ser nulo"
+          },
+          len: {
+            args: [1, 100],
+            msg: "El nombre de la sala debe tener entre 1 y 100 caracteres"
+          }
         }
-    },
+      },
     capacidad: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -4,6 +4,8 @@ const cors = require('cors');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
+
 //conexion a la base de datos
 const sequelize = require("./database/db");
 require('./database/associations')
@@ -15,6 +17,8 @@ const updateMoviesRouter = require("./routes/v1/updateMoviesRoutes")
 app.use("/v1/cine/updateMovies", updateMoviesRouter)
 const moviesRouter = require("./routes/v1/moviesRoutes")
 app.use("/v1/cine/movies", moviesRouter)
+const authRouter = require("./routes/v1/authRoutes")
+app.use("/v1/cine/", authRouter)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT} 🚀🚀`)

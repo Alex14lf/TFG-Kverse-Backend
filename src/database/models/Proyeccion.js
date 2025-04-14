@@ -39,7 +39,7 @@ Proyeccion.init({
         },
         references: {
             model: 'peliculas', // Nombre de la tabla 'peliculas'
-            key: 'id_pelicula'           // Referencia al campo 'id' de la tabla 'peliculas'
+            key: 'id_api'           // Referencia al campo 'id' de la tabla 'peliculas'
         }
     },
     sala_id: {

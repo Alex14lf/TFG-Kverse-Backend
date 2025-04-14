@@ -90,7 +90,7 @@ Usuario.init({
             msg: "El campo teléfono no puede ser nulo",
           },
           len: {
-            args: [9, 15],
+            args: [9, 9],
             msg: "El campo teléfono debe tener 9 caracteres",
           },
           isNumeric: {
