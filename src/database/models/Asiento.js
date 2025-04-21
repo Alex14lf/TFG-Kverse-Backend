@@ -9,31 +9,31 @@ Asiento.init({
         primaryKey: true,
         autoIncrement: true
     },
-    estado: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: "El campo estado no puede ser nulo"
-            },
-            len: {
-                args: [1, 50],
-                msg: "El campo estado debe tener entre 1 y 50 caracteres"
-            }
-        }
-    },
-    sala_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: "El campo sala_id no puede ser nulo"
-            },
-            isInt: {
-                msg: "El campo sala_id debe ser un número entero"
-            }
-        }
-    },
+    // estado: {
+    //     type: DataTypes.STRING(50),
+    //     allowNull: false,
+    //     validate: {
+    //         notNull: {
+    //             msg: "El campo estado no puede ser nulo"
+    //         },
+    //         len: {
+    //             args: [1, 50],
+    //             msg: "El campo estado debe tener entre 1 y 50 caracteres"
+    //         }
+    //     }
+    // },
+    // sala_id: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    //     validate: {
+    //         notNull: {
+    //             msg: "El campo sala_id no puede ser nulo"
+    //         },
+    //         isInt: {
+    //             msg: "El campo sala_id debe ser un número entero"
+    //         }
+    //     }
+    // },
     fila: {
         type: DataTypes.INTEGER, 
         allowNull: false,
@@ -49,8 +49,8 @@ Asiento.init({
                 msg: "El valor de la fila debe ser al menos 1"
             },
             max: {
-                args: [99], 
-                msg: "El valor de la fila no puede ser mayor a 99"
+                args: [8], 
+                msg: "El valor de la fila no puede ser mayor a 8"
             }
         }
     },
@@ -69,8 +69,8 @@ Asiento.init({
                 msg: "El número de asiento debe ser al menos 1"
             },
             max: {
-                args: [99], 
-                msg: "El número de asiento no puede ser mayor a 99"
+                args: [16], 
+                msg: "El número de asiento no puede ser mayor a 16"
             }
         }
     }

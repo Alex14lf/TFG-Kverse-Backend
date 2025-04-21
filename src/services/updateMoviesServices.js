@@ -2,6 +2,7 @@ const Pelicula = require('../database/models/Pelicula');
 const Sala = require('../database/models/Sala');
 const Usuario = require('../database/models/Usuario');
 const Proyeccion = require('../database/models/Proyeccion');
+const Asiento = require('../database/models/Asiento');
 const { Op } = require('sequelize');
 const cron = require('node-cron'); // Para automatizar las tareas
 
@@ -10,13 +11,16 @@ const updateCartelera = async () => {
   await createUser(); // Crear usuario admin si no existe
   await createRooms(); // Crear salas de cine si no existen
 
+  // Verificar si ya existen los asientos en la base de datos
+  await createAsientos(); // Crear los asientos si no existen
+
   const movies = await getApiMovies();
   const moviesWithGenres = [];
 
   for (let movie of movies) {
     let order = movies.indexOf(movie) + 1; // Orden basado en la posición de la película
     const movieData = await getMovieDetais(movie.id);
-    const formatedMovie= await updateMovie(movieData, order);
+    const formatedMovie = await updateMovie(movieData, order);
     moviesWithGenres.push(formatedMovie);
   }
 
@@ -25,7 +29,7 @@ const updateCartelera = async () => {
 
   // Generar las proyecciones desde hoy hasta el domingo
   await generateProjections(moviesWithGenres);
-  
+
   console.log("🎬 Cartelera actualizada correctamente");
   return moviesWithGenres;
 };
@@ -74,7 +78,7 @@ const updateMovie = async (movieData, order) => {
   const urlImagenes = process.env.URL_IMAGENES;
 
   const movieObject = {
-    id_api: movieData.id,
+    id_pelicula: movieData.id,
     titulo: movieData.title || "Matrix",
     genero: movieData.genres[0]?.name || "Ciencia ficción",
     sinopsis: movieData.overview?.length >= 10 ? movieData.overview : "Sinopsis no disponible",
@@ -89,11 +93,11 @@ const updateMovie = async (movieData, order) => {
 
 
   // Comprobar si la película ya existe en la BD
-  const peliculaExistente = await Pelicula.findOne({ where: { id_api: movieObject.id_api } });
-  
+  const peliculaExistente = await Pelicula.findOne({ where: { id_pelicula: movieObject.id_pelicula } });
+
   if (peliculaExistente) {
     // Si ya existe, actualizar el orden
-    await Pelicula.update({ orden: order, disponible: true }, { where: { id_api: movieObject.id_api } });
+    await Pelicula.update({ orden: order, disponible: true }, { where: { id_pelicula: movieObject.id_pelicula } });
     console.log(`✅ Actualizado orden de película: ${movieObject.titulo}`);
   } else {
     // Si no existe, crearla
@@ -106,10 +110,10 @@ const updateMovie = async (movieData, order) => {
 
 // 4. Desactivar las películas que ya no están en cartelera
 const deactivateMovies = async (moviesWithGenres) => {
-  const idsEnCartelera = moviesWithGenres.map(m => m.id_api);
+  const idsEnCartelera = moviesWithGenres.map(m => m.id_pelicula);
   await Pelicula.update(
     { disponible: false, orden: null },
-    { where: { id_api: { [Op.notIn]: idsEnCartelera } } }
+    { where: { id_pelicula: { [Op.notIn]: idsEnCartelera } } }
   );
   console.log("🎬 Películas desactivadas correctamente.");
 };
@@ -186,7 +190,7 @@ const generateProjections = async (moviesWithGenres) => {
         // Crear las proyecciones con los horarios asignados
         for (let k = 0; k < horariosAsignados.length; k++) {
           const horaInicio = horariosAsignados[k];
-          
+
           // Crear una nueva fecha con la hora deseada para cada proyección
           let fechaInicio = new Date(fecha); // Copiar la fecha base para evitar modificarla
           fechaInicio.setHours(horaInicio, 0, 0, 0); // Establecer la hora correcta
@@ -194,7 +198,7 @@ const generateProjections = async (moviesWithGenres) => {
           // Verificar si ya existe una proyección para esa sala, película y hora
           const proyeccionExistente = await Proyeccion.findOne({
             where: {
-              pelicula_id: pelicula.id_api, // Usamos el id de la API para las proyecciones
+              pelicula_id: pelicula.id_pelicula, // Usamos el id de la API para las proyecciones
               sala_id: sala.id_sala,
               fecha_inicio: fechaInicio
             }
@@ -203,7 +207,7 @@ const generateProjections = async (moviesWithGenres) => {
           if (!proyeccionExistente) {
             // Si no existe, creamos la proyección
             await Proyeccion.create({
-              pelicula_id: pelicula.id_api,  // id de la película obtenida de la API
+              pelicula_id: pelicula.id_pelicula,  // id de la película obtenida de la API
               sala_id: sala.id_sala,
               fecha_inicio: fechaInicio,
               duracion: pelicula.duracion
@@ -229,26 +233,64 @@ const generateProjections = async (moviesWithGenres) => {
 // 7. Crear el usuario admini
 const createUser = async () => {
   try {
-      // Verifica si ya existen usuarios
-      const existingUsers = await Usuario.findAll();
+    // Verifica si ya existen usuarios
+    const existingUsers = await Usuario.findAll();
 
-      // Si no hay usuarios, crea uno nuevo
-      if (existingUsers.length === 0) {
-          const newUser = await Usuario.create({
-              dni: '07601563L',
-              nombre: 'Admin',
-              apellidos: 'Admin Admin',
-              email: 'admin@gmail.com',
-              fecha_nacimiento: '1990-05-20',
-              telefono: '691014302',
-              password: 'Kverse123'  // La contraseña se hasheará automáticamente
-          });
+    // Si no hay usuarios, crea uno nuevo
+    if (existingUsers.length === 0) {
+      const newUser = await Usuario.create({
+        dni: '07601563L',
+        nombre: 'Admin',
+        apellidos: 'Admin Admin',
+        email: 'admin@gmail.com',
+        fecha_nacimiento: '1990-05-20',
+        telefono: '691014302',
+        password: 'Kverse123'  // La contraseña se hasheará automáticamente
+      });
 
-          console.log('✅ Usuario creado con éxito:', newUser.get({ plain: true }));
-      } else {
-          console.log("⚠️ Ya existen usuarios en la base de datos.");
-      }
+      console.log('✅ Usuario creado con éxito:', newUser.get({ plain: true }));
+    } else {
+      console.log("⚠️ Ya existen usuarios en la base de datos.");
+    }
   } catch (error) {
-      console.error('❌ Error al crear el usuario:', error.message);
+    console.error('❌ Error al crear el usuario:', error.message);
+  }
+};
+
+// 8. Crear los asientos 
+// Crear los asientos si no existen
+const createAsientos = async () => {
+  // Definir la estructura de las filas y los números de asientos
+  const estructuraAsientos = [
+    { fila: 1, numAsientos: 8 },
+    { fila: 2, numAsientos: 12 },
+    { fila: 3, numAsientos: 12 },
+    { fila: 4, numAsientos: 12 },
+    { fila: 5, numAsientos: 12 },
+    { fila: 6, numAsientos: 14 },
+    { fila: 7, numAsientos: 14 },
+    { fila: 8, numAsientos: 16 }
+  ];
+
+  // Verificar si ya existen asientos
+  const asientosExistentes = await Asiento.findAll();
+
+  if (asientosExistentes.length === 0) {
+    // Si no existen, creamos los asientos
+    for (let i = 0; i < estructuraAsientos.length; i++) {
+      const fila = estructuraAsientos[i].fila;
+      const numAsientos = estructuraAsientos[i].numAsientos;
+
+      // Crear los asientos para cada fila
+      for (let j = 1; j <= numAsientos; j++) {
+        await Asiento.create({
+          fila: fila,
+          numero: j, // Número del asiento en la fila
+        });
+      }
+    }
+    console.log('✅ Asientos creados correctamente');
+  } else {
+    console.log('‼️ Los asientos ya existen en la base de datos.');
   }
 };

@@ -39,7 +39,7 @@ Proyeccion.init({
         },
         references: {
             model: 'peliculas', // Nombre de la tabla 'peliculas'
-            key: 'id_api'           // Referencia al campo 'id' de la tabla 'peliculas'
+            key: 'id_pelicula'           // Referencia al campo 'id' de la tabla 'peliculas'
         }
     },
     sala_id: {
@@ -65,24 +65,7 @@ Proyeccion.init({
                 msg: "El campo inicio debe ser una fecha válida"
             }
         }
-    }, //PENSANDO SI AÑADIRLO O NO, EN PRINCIPIO NO
-    // fecha_fin: {
-    //     type: DataTypes.DATE,
-    //     allowNull: false,
-    //     validate: {
-    //         notNull: {
-    //             msg: "El campo fin no puede ser nulo"
-    //         },
-    //         isDate: {
-    //             msg: "El campo fin debe ser una fecha válida"
-    //         },
-    //         // Validación de que la fecha de fin sea posterior a la de inicio
-    //         isAfter: {
-    //             args: () => new Date().toISOString(),
-    //             msg: "La fecha de fin debe ser posterior a la fecha de inicio"
-    //         }
-    //     }
-    // }
+    },
 }, {
     sequelize,
     modelName: "proyecciones",

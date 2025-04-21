@@ -21,27 +21,31 @@ const signUp = async (req, res) => {
 
     // Llamamos al servicio para registrar al nuevo usuario
     const result = await AuthService.signUp(email, password, dni, nombre, apellidos, telefono, fecha_nacimiento);
-    
+
     // Enviamos la respuesta exitosa
     res.status(201).json(result); // 201 para respuesta de creación exitosa
   } catch (error) {
     console.error("❌ Error en signUp:", error.message);
 
-    // Revisamos si el error es una validación para enviarlo correctamente al cliente
+    // Si el error es una validación de Sequelize, devolvemos los errores específicos de cada campo
     if (error.name === 'SequelizeValidationError') {
-      // Aquí mapeamos los errores para que cada campo tenga su error
       const errors = error.errors.reduce((acc, err) => {
         acc[err.path] = err.message;  // Usamos el nombre del campo como clave y el mensaje como valor
         return acc;
       }, {});
-
-      // Enviamos los errores como un objeto con la clave del campo y el mensaje de error
       return res.status(400).json({ errors });
-    } else {
-      res.status(500).json({ message: "Error interno del servidor" }); // Si el error no es de validación
     }
+
+    // Si el error es un error relacionado con el correo electrónico ya registrado
+    if (error.message === "El correo electrónico ya está registrado") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // En caso de cualquier otro error general
+    res.status(500).json({ message: "Error interno del servidor" }); // Si el error no es de validación ni un correo ya registrado
   }
 };
+
 
 
 module.exports = {

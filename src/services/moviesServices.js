@@ -39,24 +39,10 @@ const getMovieById = async (id) => {
     }
 };
 
-const getMovieByIdApi = async (id_api) => {
-    try {
-        const movie = await Pelicula.findOne({ where: { id_api } });  // Buscar por el ID externo
 
-        if (!movie) {
-            throw new Error('Película no encontrada');
-        }
-
-        return movie;
-    } catch (error) {
-        console.error(`Error al obtener la película con externalId ${id_api}:`, error.message);
-        throw new Error('Error al obtener la película');
-    }
-};
 
 module.exports = {
     getMovies,
     getActiveMovies,
     getMovieById,
-    getMovieByIdApi
 };

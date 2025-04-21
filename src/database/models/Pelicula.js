@@ -7,10 +7,6 @@ Pelicula.init({
     id_pelicula: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
-    },
-    id_api: {
-        type: DataTypes.INTEGER,
         allowNull: false,
         unique: true,  
         validate: {
@@ -140,12 +136,7 @@ Pelicula.init({
     },
     orden: {
         type: DataTypes.INTEGER,
-        // allowNull: false,
-        // unique: true,  
         validate: {
-            // notNull: {
-            //     msg: "El campo orden no puede ser nulo"
-            // },
             isInt: {
                 msg: "El campo orden debe ser un número entero"
             },

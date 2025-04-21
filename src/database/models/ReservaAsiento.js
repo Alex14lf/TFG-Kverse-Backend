@@ -48,4 +48,5 @@ ReservaAsiento.init({
     freezeTableName: true
 });
 
+
 module.exports = ReservaAsiento;

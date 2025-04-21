@@ -31,23 +31,9 @@ const getMovieById = async (req, res) => {
     }
 };
 
-const getMovieByIdApi = async (req, res) => {
-    try {
-        const { id_api } = req.params;  
-        const movie = await moviesService.getMovieByIdApi(id_api);
-        if (!movie) {
-            return res.status(404).json({ error: 'Película no encontrada por ID externo' });
-        }
-        res.status(200).json(movie); 
-    } catch (error) {
-        console.error("Error en getMovieByExternalId:", error.message);
-        res.status(500).json({ error: 'Error al obtener la película por ID externo' });  
-    }
-};
 
 module.exports = {
     getMovies,
     getActiveMovies,
     getMovieById,
-    getMovieByIdApi
 };
